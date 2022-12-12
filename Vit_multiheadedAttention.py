@@ -133,8 +133,6 @@ class TransformerEncoder(nn.Sequential):
         
         
         
-        
-        
 class ClassificationHead(nn.Sequential):
     def __init__(self, emb_size: int = 768, n_classes: int = 1000):
         super().__init__(
