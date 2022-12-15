@@ -35,23 +35,23 @@ class MultiHeadAttention(nn.Module):
         self.mha_linear = nn.Linear(d_model, d_model)
 
     def scaled_dot_product_attention(self, Q, K, V):
-        # shape(Q) = [B x seq_len x D/num_heads] = [B x T x d_k]
+        # shape(Q) = [B x feature_dim x D/num_heads] = [B x T x d_k]
         # shape(K, V) = [B x T x d_k]
 
         Q_K_matmul = torch.matmul(Q, K.permute(0, 2, 1))
         scores = Q_K_matmul/m.sqrt(self.d)
-        # shape(scores) = [B x seq_len x seq_len]
+        # shape(scores) = [B x feature_dim x feature_dim]
 
         attention_weights = F.softmax(scores, dim=-1)
-        # shape(attention_weights) = [B x seq_len x seq_len]
+        # shape(attention_weights) = [B x feature_dim x feature_dim]
 
         output = torch.matmul(attention_weights, V)
-        # shape(output) = [B x seq_len x D/num_heads]
+        # shape(output) = [B x feature_dim x D/num_heads]
 
         return output, attention_weights
 
     def forward(self, x):
-        # shape(x) = [B x seq_len x D]
+        # shape(x) = [B x feature_dim x D]
 
         Q = [linear_Q(x) for linear_Q in self.linear_Qs]
         print('shape of Query',Q[0].shape)
@@ -60,12 +60,12 @@ class MultiHeadAttention(nn.Module):
         V = [linear_V(x) for linear_V in self.linear_Vs]
         print('shape of Value',V[0].shape)
 
-        # shape(Q, K, V) = [B x seq_len x D/num_heads] * num_heads
+        # shape(Q, K, V) = [B x feature_dim x D/num_heads] * num_heads
 
         output_per_head = []
         attn_weights_per_head = []
-        # shape(output_per_head) = [B x seq_len x D/num_heads] * num_heads
-        # shape(attn_weights_per_head) = [B x seq_len x seq_len] * num_heads
+        # shape(output_per_head) = [B x feature_dim x D/num_heads] * num_heads
+        # shape(attn_weights_per_head) = [B x feature_dim x feature_dim] * num_heads
         for Q_, K_, V_ in zip(Q, K, V):
             
             ##run scaled_dot_product_attention
