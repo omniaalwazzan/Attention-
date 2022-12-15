@@ -4,7 +4,7 @@ Created on Thu Dec 15 17:01:29 2022
 
 @author: Omnia
 """
-# The common way of MHA is to have the q,k,v with dim (output_dim, out_dim/number_head) but here it's a self_attention with output_dim*number_heads
+# The common way of MHA is to have the q,k,v with dim (output_dim, out_dim/number_head) but here it's a with output_dim*number_heads
 # source of this code "https://github.com/xmu-xiaoma666/External-Attention-pytorch/blob/master/model/attention/SelfAttention.py"
 
 
